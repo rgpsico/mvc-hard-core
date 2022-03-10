@@ -1,23 +1,10 @@
-<h1>Register</h1>
-<form action="" method="POST">
-    <div class="form-group">
-        <label>Name</label>
-        <input type="text" class="form-control" name="name">
-    </div>
-    <div class="form-group">
-        <label>lastname</label>
-        <input type="email" name="lastname" class="form-control">
-    </div>
+<h1>create account</h1>
 
-    <div class="form-group">
-        <label>password</label>
-        <input type="password" name="password" class="form-control">
-    </div>
-
-    <div class="form-group">
-        <label>confirm Password</label>
-        <input type="password" name="confirmPassword" class="form-control">
-    </div>
-
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+<?php $form = \app\core\form\Form::begin('', 'post') ?>
+<?php echo $form->field($model, 'firstname'); ?>
+<?php echo $form->field($model, 'lastname'); ?>
+<?php echo $form->field($model, 'email'); ?>
+<?php echo $form->field($model, 'password')->passwordField();; ?>
+<?php echo $form->field($model, 'confirmPassword')->passwordField(); ?>
+<input type="submit" class="btn btn-success">
+<?php $form = \app\core\form\Form::end() ?>
