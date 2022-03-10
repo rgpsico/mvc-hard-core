@@ -1,0 +1,18 @@
+{
+    "name": "user/mvchard",
+  
+    "authors": [
+        {
+            "name": "rgpsico",
+            "email": "gerro121@hotmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+             "app\\": "./"
+        }
+    },
+    "require": {
+
+    }
+}
