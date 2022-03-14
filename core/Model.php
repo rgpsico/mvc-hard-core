@@ -22,6 +22,17 @@ abstract class Model
 
     abstract public function rules(): array;
 
+    public function labels(): array
+    {
+        return [];
+    }
+
+
+    public function getLabels($atribbute)
+    {
+        return $this->labels()[$atribbute] ?? $atribbute;
+    }
+
     public array $errors = [];
 
 
@@ -40,23 +51,24 @@ abstract class Model
                 }
 
                 if ($ruleName === self::RULE_REQUIRED && !$value) {
-                    $this->addError($atribbute, self::RULE_REQUIRED);
+                    $this->addErrorForRule($atribbute, self::RULE_REQUIRED);
                 }
 
                 if ($ruleName === self::RULE_EMAIL && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
-                    $this->addError($atribbute, self::RULE_EMAIL);
+                    $this->addErrorForRule($atribbute, self::RULE_EMAIL);
                 }
 
                 if ($ruleName === self::RULE_MIN && strlen($value) < $rule['min']) {
-                    $this->addError($atribbute, self::RULE_MIN, $rule);
+                    $this->addErrorForRule($atribbute, self::RULE_MIN, $rule);
                 }
 
                 if ($ruleName === self::RULE_MAX && strlen($value) > $rule['max']) {
-                    $this->addError($atribbute, self::RULE_MAX, $rule);
+                    $this->addErrorForRule($atribbute, self::RULE_MAX, $rule);
                 }
 
                 if ($ruleName === self::RULE_MATCH && $value !== $this->{$rule['match']}) {
-                    $this->addError($atribbute, self::RULE_MATCH, $rule);
+                    $rule['match'] = $this->getLabels($rule['match']);
+                    $this->addErrorForRule($atribbute, self::RULE_MATCH, $rule);
                 }
 
                 if ($ruleName === self::RULE_UNIQUE) {
@@ -70,7 +82,7 @@ abstract class Model
                     $record = $statement->fetchObject();
 
                     if ($record) {
-                        $this->addError($atribbute, self::RULE_UNIQUE, $rule, ['field' => $atribbute]);
+                        $this->addErrorForRule($atribbute, self::RULE_UNIQUE, $rule, ['field' => $this->getLabels($atribbute)]);
                     }
                 }
             }
@@ -79,12 +91,17 @@ abstract class Model
         return empty($this->errors);
     }
 
-    public function addError($atribbute, $rule, $params = [])
+    private function addErrorForRule($atribbute, $rule, $params = [])
     {
         $message = $this->errorMessages()[$rule] ?? '';
         foreach ($params as $key => $value) {
             $message  = str_replace("{{$key}}", $value, $message);
         }
+        $this->errors[$atribbute][] = $message;
+    }
+
+    public function addError($atribbute, $message)
+    {
         $this->errors[$atribbute][] = $message;
     }
 
@@ -96,7 +113,7 @@ abstract class Model
             self::RULE_MIN => 'the minim digits is {min}',
             self::RULE_MAX => 'the max digits is {max} ',
             self::RULE_MATCH => 'This field must be the same as {match}',
-            self::RULE_UNIQUE => 'Record with this {field} already exists',
+            self::RULE_UNIQUE => "Record with this {field} already exists",
 
         ];
     }
