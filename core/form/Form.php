@@ -20,6 +20,6 @@ class Form
     public function field(Model $model, $atribbute)
     {
 
-        return new Field($model, $atribbute);
+        return new InputField($model, $atribbute);
     }
 }

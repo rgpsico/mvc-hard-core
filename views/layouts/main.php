@@ -2,6 +2,8 @@
 
 use \app\core\Application;
 
+
+
 ?>
 
 <!doctype html>
@@ -15,7 +17,7 @@ use \app\core\Application;
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
-    <title>contact</title>
+    <title><?php echo $this->title ?></title>
 </head>
 
 <body>
@@ -49,6 +51,10 @@ use \app\core\Application;
             <?php else : ?>
 
                 <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="/profile">Profile</a>
+                    </li>
+
                     <li class="nav-item active">
                         <a class="nav-link" href="/logout">Bem vindo <?php echo Application::$app->user->getDisplayName()  ?>
                             (Logout)

@@ -2,12 +2,15 @@
 
 namespace app\core;
 
+use app\core\db\Database;
+use app\core\db\DbModel;
 use app\models\LoginForm;
 
 class Application
 {
     public static string $ROOT_DIR;
 
+    public string $layout = 'main';
     public string $userClass;
     public Router $router;
     public Request $request;
@@ -16,8 +19,9 @@ class Application
     public ?DbModel $user;
     public Session $session;
     public LoginForm $login;
+    public View $view;
     public static Application $app;
-    public Controller $controller;
+    public ?Controller $controller = null;
 
     public function __construct($rootPath, array $config)
     {
@@ -27,6 +31,7 @@ class Application
         $this->request = new Request();
         $this->response = new Response();
         $this->session = new Session();
+        $this->view = new View();
 
         $this->router = new Router($this->request, $this->response);
 
@@ -49,7 +54,14 @@ class Application
 
     public function run()
     {
-        echo $this->router->resolver();
+        try {
+            echo $this->router->resolver();
+        } catch (\Exception $e) {
+            $this->response->setStatusCode($e->getCode());
+            echo $this->view->renderView('_error', [
+                'exception' => $e
+            ]);
+        }
     }
 
     public function getController()
