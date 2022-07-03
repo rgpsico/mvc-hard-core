@@ -1,11 +1,16 @@
 {
-    "name": "rgpsico/php-mvc-core",
+    "name": "rgpsico/mvchard",
 
     "authors": [
         {
             "name": "rgpsico",
-            "email": "gerro121@hotmail.com"
+            "email": "rgyr2010@hotmail.com"
         }
     ],
-    "require": {}
+    "require": {},
+    "autoload": {
+        "psr-4": {
+             "rgpsico\\mvchard\\": "."
+        }
+    }
 }
